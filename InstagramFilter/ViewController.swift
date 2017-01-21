@@ -10,6 +10,7 @@ import UIKit
 
 class ViewController: UIViewController{
     
+    @IBOutlet weak var tableView: UITableView!
     //var usernames = [String]()
     var postsToDisplay: [PostToDisplay] = []
     
@@ -44,6 +45,7 @@ class ViewController: UIViewController{
                                             print ("Followers: " + String(((user["followed_by"] as! [String: AnyObject])["count"] as! Int)) + "\n")
                                             print ("Likes: " + String(((node["likes"] as! [String: AnyObject])["count"] as! Int)) + "\n")
                                             print (user["username"] as! String + "\n")
+                                            self.tableView.reloadData()
                                         }
                                     }
                                 }
