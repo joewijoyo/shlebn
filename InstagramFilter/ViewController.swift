@@ -3,7 +3,7 @@
 //  InstagramFilter
 //
 //  Created by Joe Wijoyo on 1/18/17.
-//  Copyright © 2017 Joe Wijoyo. All rights reserved.
+//  Copyright © 2017 Joe Wijoyo. All rights reserved. WOWOOWOWOWOWOWO
 //
 
 import UIKit
