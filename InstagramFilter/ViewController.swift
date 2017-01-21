@@ -8,15 +8,15 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-
-    var json: Array<Any>!
+class ViewController: UIViewController{
     
-    var usernames = [String]()
+    //var usernames = [String]()
+    var postsToDisplay: [PostToDisplay] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        let usernames = ["sallykim7", "itsronayeh", "helloosandra"]
         for username in usernames {
             do {
                 let requestString: String = "https://www.instagram.com/" + username + "/?__a=1"
@@ -31,35 +31,48 @@ class ViewController: UIViewController {
                     
                     if (statusCode == 200) {
                         do{
+                            let json = try JSONSerialization.jsonObject(with: data!, options:.allowFragments) as? [String: Any]
                             
-                            let json = try JSONSerialization.jsonObject(with: data!, options:.allowFragments)
-                            
-                            if let stations = json["stations"] as? [[String: AnyObject]] {
-                                
-                                for station in stations {
-                                    
-                                    if let name = station["stationName"] as? String {
-                                        
-                                        if let year = station["buildYear"] as? String {
-                                            print(name,year)
+                            if let user = json?["user"] as? [String: Any] {
+                                if let media = user["media"] as? [String: AnyObject] {
+                                    if let nodes = media["nodes"] as? [[String: AnyObject]] {
+                                        for node in nodes {
+                                            
+                                        postsToDisplay.append(PostToDisplay(user:user, likes:(nodes["likes"])["count"], followers: (user["followed_by"])["count"]))
                                         }
-                                        
                                     }
                                 }
-                                
                             }
-                            
-                        }catch {
+                        } catch {
                             print("Error with Json: \(error)")
                         }
                     }
-                    
                 }
-                
+                task.resume()
             }
         }
-        task.resume()
     }
+    
+    /*
+    func downloadImage(url: URL) {
+        //print("Download Started")
+        getDataFromUrl(url: url) { (data, response, error)  in
+            guard let data = data, error == nil else { return }
+            print(response?.suggestedFilename ?? url.lastPathComponent)
+            //print("Download Finished")
+            DispatchQueue.main.async() { () -> Void in
+                self.imageView.image = UIImage(data: data)
+            }
+        }
+    }
+    
+    func getDataFromUrl(url: URL, completion: @escaping (_ data: Data?, _  response: URLResponse?, _ error: Error?) -> Void) {
+        URLSession.shared.dataTask(with: url) {
+            (data, response, error) in
+            completion(data, response, error)
+            }.resume()
+    }
+    */
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -67,5 +80,15 @@ class ViewController: UIViewController {
     }
 
 
+}
+
+extension ViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return postsToDisplay.count
+    }
 }
 
