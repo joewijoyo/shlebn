@@ -52,6 +52,10 @@
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="8lf-aR-5Ch"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="BKO-e7-DyN"/>
+                                </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -59,9 +63,16 @@
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Ob2-Jb-BBr" secondAttribute="bottom" id="9Ib-YN-Wvt"/>
                             <constraint firstAttribute="trailing" secondItem="Ob2-Jb-BBr" secondAttribute="trailing" id="Hro-3O-RpR"/>
                             <constraint firstItem="Ob2-Jb-BBr" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="J5l-d1-RYc"/>
+                            <constraint firstItem="Ob2-Jb-BBr" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="PiY-zu-IN0"/>
+                            <constraint firstItem="Ob2-Jb-BBr" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="chs-wA-Epq"/>
                             <constraint firstItem="Ob2-Jb-BBr" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="f0B-h7-3oZ"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Ob2-Jb-BBr" secondAttribute="bottom" id="nMh-I9-pPB"/>
+                            <constraint firstAttribute="trailing" secondItem="Ob2-Jb-BBr" secondAttribute="trailing" id="q7g-oc-fKG"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="tableView" destination="Ob2-Jb-BBr" id="tGC-mt-ySj"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

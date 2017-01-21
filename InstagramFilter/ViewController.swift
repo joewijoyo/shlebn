@@ -10,12 +10,13 @@ import UIKit
 
 class ViewController: UIViewController{
     
+    @IBOutlet weak var tableView: UITableView!
     //var usernames = [String]()
     var postsToDisplay: [PostToDisplay] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
         let usernames = ["sallykim7", "itsronayeh", "helloosandra"]
         for username in usernames {
             do {
@@ -34,11 +35,17 @@ class ViewController: UIViewController{
                             let json = try JSONSerialization.jsonObject(with: data!, options:.allowFragments) as? [String: Any]
                             
                             if let user = json?["user"] as? [String: Any] {
+                                //dump(user)
                                 if let media = user["media"] as? [String: AnyObject] {
                                     if let nodes = media["nodes"] as? [[String: AnyObject]]     {
+                                        //dump(nodes)
                                         for node in nodes {
                                         self.postsToDisplay.append(PostToDisplay(user:user["username"] as! String, likes:(node["likes"] as! [String: AnyObject])["count"] as! Int, followers: (user["followed_by"] as! [String: AnyObject])["count"] as! Int))
-                                                print (user["username"])
+                                                //print (user["username"])
+                                            print ("Followers: " + String(((user["followed_by"] as! [String: AnyObject])["count"] as! Int)) + "\n")
+                                            print ("Likes: " + String(((node["likes"] as! [String: AnyObject])["count"] as! Int)) + "\n")
+                                            print (user["username"] as! String + "\n")
+                                            self.tableView.reloadData()
                                         }
                                     }
                                 }
