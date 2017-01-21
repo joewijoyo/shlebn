@@ -35,10 +35,10 @@ class ViewController: UIViewController{
                             
                             if let user = json?["user"] as? [String: Any] {
                                 if let media = user["media"] as? [String: AnyObject] {
-                                    if let nodes = media["nodes"] as? [[String: AnyObject]] {
+                                    if let nodes = media["nodes"] as? [[String: AnyObject]]     {
                                         for node in nodes {
-                                            
-                                        postsToDisplay.append(PostToDisplay(user:user, likes:(nodes["likes"])["count"], followers: (user["followed_by"])["count"]))
+                                        self.postsToDisplay.append(PostToDisplay(user:user["username"] as! String, likes:(node["likes"] as! [String: AnyObject])["count"] as! Int, followers: (user["followed_by"] as! [String: AnyObject])["count"] as! Int))
+                                                print (user["username"])
                                         }
                                     }
                                 }
@@ -78,13 +78,17 @@ class ViewController: UIViewController{
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let filteredCell = tableView.dequeueReusableCell(withIdentifier: "FilteredTableViewCell") as! FilteredTableViewCell
         
+        let thisCellPost = postsToDisplay[indexPath.row]
+        //filteredCell.cellImage =
+        filteredCell.cellText.text = "User:" + thisCellPost.user + "\n" + String(thisCellPost.likes) + "\n" + String(thisCellPost.followers)
+
+        return filteredCell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
