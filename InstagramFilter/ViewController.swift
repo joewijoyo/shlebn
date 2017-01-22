@@ -40,7 +40,7 @@ class ViewController: UIViewController{
                                     if let nodes = media["nodes"] as? [[String: AnyObject]]     {
                                         //dump(nodes)
                                         for node in nodes {
-                                    self.postsToDisplay.append(PostToDisplay(user:user["username"] as! String, likes:(node["likes"] as! [String: AnyObject])["count"] as! Int, followers: (user["followed_by"] as! [String: AnyObject])["count"] as! Int))
+                                            self.postsToDisplay.append(PostToDisplay(imageURL: node["display_src"] as! String, user:user["username"] as! String, likes:(node["likes"] as! [String: AnyObject])["count"] as! Int, followers: (user["followed_by"] as! [String: AnyObject])["count"] as! Int))
                                                 //print (user["username"])
                                             print ("Followers: " + String(((user["followed_by"] as! [String: AnyObject])["count"] as! Int)) + "\n")
                                             print ("Likes: " + String(((node["likes"] as! [String: AnyObject])["count"] as! Int)) + "\n")
@@ -97,6 +97,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         let thisCellPost = postsToDisplay[indexPath.row]
         //filteredCell.cellImage =
         filteredCell.cellText.text = "User:" + thisCellPost.user + "\n" + String(thisCellPost.likes) + "\n" + String(thisCellPost.followers)
+        filteredCell.imageView?.setImageFromURL(stringImageUrl: thisCellPost.imageURL!)
 
         return filteredCell
     }
