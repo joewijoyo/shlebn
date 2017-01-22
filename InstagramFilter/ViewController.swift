@@ -40,12 +40,15 @@ class ViewController: UIViewController{
                                     if let nodes = media["nodes"] as? [[String: AnyObject]]     {
                                         //dump(nodes)
                                         for node in nodes {
-                                        self.postsToDisplay.append(PostToDisplay(user:user["username"] as! String, likes:(node["likes"] as! [String: AnyObject])["count"] as! Int, followers: (user["followed_by"] as! [String: AnyObject])["count"] as! Int))
+                                    self.postsToDisplay.append(PostToDisplay(user:user["username"] as! String, likes:(node["likes"] as! [String: AnyObject])["count"] as! Int, followers: (user["followed_by"] as! [String: AnyObject])["count"] as! Int))
                                                 //print (user["username"])
                                             print ("Followers: " + String(((user["followed_by"] as! [String: AnyObject])["count"] as! Int)) + "\n")
                                             print ("Likes: " + String(((node["likes"] as! [String: AnyObject])["count"] as! Int)) + "\n")
                                             print (user["username"] as! String + "\n")
-                                            self.tableView.reloadData()
+                                            DispatchQueue.main.async {
+                                                //self.imageView.image = image
+                                                self.tableView.reloadData()
+                                            }
                                         }
                                     }
                                 }
@@ -89,7 +92,7 @@ class ViewController: UIViewController{
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let filteredCell = tableView.dequeueReusableCell(withIdentifier: "FilteredTableViewCell") as! FilteredTableViewCell
+        let filteredCell = tableView.dequeueReusableCell(withIdentifier: "FilteredTableViewCell", for: indexPath) as! FilteredTableViewCell
         
         let thisCellPost = postsToDisplay[indexPath.row]
         //filteredCell.cellImage =
@@ -100,6 +103,16 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return postsToDisplay.count
+    }
+}
+
+extension UIImageView {
+    func setImageFromURL(stringImageUrl url: String){
+        if let url = NSURL(string: url) {
+            if let data = NSData(contentsOf: url as URL) {
+                self.image = UIImage(data: data as Data)
+            }
+        }
     }
 }
 
