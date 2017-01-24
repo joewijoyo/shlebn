@@ -17,9 +17,97 @@ class ViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        loadFromUsernames()
+        loadFromTags()
+    }
+    
+    func loadFromTags() {
+        let tags = ["thehiddenmug"]
+        
+        for tag in tags {
+            let requestString: String = "https://www.instagram.com/explore/tags/" + tag + "/?__a=1"
+            let requestURL: NSURL = NSURL(string: requestString)!
+            let urlRequest: NSMutableURLRequest = NSMutableURLRequest(url: requestURL as URL)
+            let session = URLSession.shared
+            let task = session.dataTask(with: urlRequest as URLRequest) {
+                (data, response, error) -> Void in
+                
+                let httpResponse = response as! HTTPURLResponse
+                let statusCode = httpResponse.statusCode
+                
+                if (statusCode == 200) {
+                    do {
+                        let json = try JSONSerialization.jsonObject(with: data!, options:.allowFragments) as? [String: Any]
+                        
+                        if let tag = json?["tag"] as? [String: Any] {
+                            //dump(user)
+                            if let top_posts = tag["top_posts"] as? [String: AnyObject] {
+                                if let nodes = top_posts["nodes"] as? [[String: AnyObject]]     {
+                                    //dump(nodes)
+                                    for node in nodes {
+                                        
+                                        let imageURL = node["display_src"] as! String
+                                        let user = tag["username"] as! String
+                                        let likes = (node["likes"] as! [String: AnyObject])["count"] as! Int
+                                        let followers = ((tag["followed_by"] as! [String: AnyObject])["count"] as! Int)
+                                        
+                                        self.postsToDisplay.append(PostToDisplay(imageURL: imageURL, user:user, likes: likes, followers: followers))
+                                       
+                                        DispatchQueue.main.async {
+                                            self.tableView.reloadData()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } catch {
+                        print("Error with Json: \(error)")
+                    }
+                }
+            }
+            task.resume()
+        }
+    }
+    
+    func numFollowers(username: String) -> String {
+        
+    }
+    
+    func getUserFromCode(code: String) -> String {
+        var user: String!
+        let requestString: String = "https://www.instagram.com/p/" + code + "/?__a=1"
+        let requestURL: NSURL = NSURL(string: requestString)!
+        let urlRequest: NSMutableURLRequest = NSMutableURLRequest(url: requestURL as URL)
+        let session = URLSession.shared
+        let task = session.dataTask(with: urlRequest as URLRequest) {
+            (data, response, error) -> Void in
+            
+            let httpResponse = response as! HTTPURLResponse
+            let statusCode = httpResponse.statusCode
+            
+            if (statusCode == 200) {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data!, options:.allowFragments) as? [String: Any]
+                    
+                    if let media = json?["media"] as? [String: Any] {
+                        //dump(user)
+                        if let owner = media["owner"] as? [String: AnyObject] {
+                            user = owner["username"] as? String
+                        }
+                    }
+                } catch {
+                    print("Error with Json: \(error)")
+                }
+            }
+        }
+        task.resume()
+        return user
+    }
+    
+    func loadFromUsernames() {
         let usernames = ["sallykim7", "itsronayeh", "helloosandra"]
+        
         for username in usernames {
-            do {
                 let requestString: String = "https://www.instagram.com/" + username + "/?__a=1"
                 let requestURL: NSURL = NSURL(string: requestString)!
                 let urlRequest: NSMutableURLRequest = NSMutableURLRequest(url: requestURL as URL)
@@ -31,7 +119,7 @@ class ViewController: UIViewController{
                     let statusCode = httpResponse.statusCode
                     
                     if (statusCode == 200) {
-                        do{
+                        do {
                             let json = try JSONSerialization.jsonObject(with: data!, options:.allowFragments) as? [String: Any]
                             
                             if let user = json?["user"] as? [String: Any] {
@@ -41,12 +129,11 @@ class ViewController: UIViewController{
                                         //dump(nodes)
                                         for node in nodes {
                                             self.postsToDisplay.append(PostToDisplay(imageURL: node["display_src"] as! String, user:user["username"] as! String, likes:(node["likes"] as! [String: AnyObject])["count"] as! Int, followers: (user["followed_by"] as! [String: AnyObject])["count"] as! Int))
-                                                //print (user["username"])
+                                            //print (user["username"])
                                             print ("Followers: " + String(((user["followed_by"] as! [String: AnyObject])["count"] as! Int)) + "\n")
                                             print ("Likes: " + String(((node["likes"] as! [String: AnyObject])["count"] as! Int)) + "\n")
                                             print (user["username"] as! String + "\n")
                                             DispatchQueue.main.async {
-                                                //self.imageView.image = image
                                                 self.tableView.reloadData()
                                             }
                                         }
@@ -59,10 +146,8 @@ class ViewController: UIViewController{
                     }
                 }
                 task.resume()
-            }
         }
     }
-    
     /*
     func downloadImage(url: URL) {
         //print("Download Started")
@@ -96,7 +181,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         let thisCellPost = postsToDisplay[indexPath.row]
         //filteredCell.cellImage =
-        filteredCell.cellText.text = "User:" + thisCellPost.user + "\n" + String(thisCellPost.likes) + "\n" + String(thisCellPost.followers)
+        filteredCell.cellText.text = "User:" + thisCellPost.user + "\nLikes:" + String(thisCellPost.likes) + "\nFollowers:" + String(thisCellPost.followers)
         filteredCell.imageView?.setImageFromURL(stringImageUrl: thisCellPost.imageURL!)
 
         return filteredCell
