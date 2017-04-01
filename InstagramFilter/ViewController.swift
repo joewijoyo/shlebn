@@ -12,13 +12,14 @@ class ViewController: UIViewController{
     
     @IBOutlet weak var tableView: UITableView!
     //var usernames = [String]()
+    var picNodeArray = [picNode]()
     var postsToDisplay: [PostToDisplay] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let usernames = ["sallykim7","itsronayeh","haileesteinfeld"]
-        var picNodeArray = [picNode]()
+
         for username in usernames {
                 let requestString: String = "https://www.instagram.com/" + username + "/?__a=1"
                 let requestURL: NSURL = NSURL(string: requestString)!
@@ -37,7 +38,7 @@ class ViewController: UIViewController{
                             if let user = json?["user"] as? [String: Any] {
                                 //dump(user)
                                 if let media = user["media"] as? [String: AnyObject] {
-                                    if let nodes = media["nodes"] as? [[String: AnyObject]]     {
+                                    if let nodes = media["nodes"] as? [[String: AnyObject]] {
                                         //dump(nodes)
                                         var maxLikeNode = nodes[0]
                                         for node in nodes {
@@ -45,38 +46,21 @@ class ViewController: UIViewController{
                                                 maxLikeNode = node
                                             }
                                         }
-                                        print("win! " + String(user["username"] as! String) + "\n")
-                                        picNodeArray.append(picNode(userName: user["username"] as! String, image: maxLikeNode["display_src"] as! String, likes: ((maxLikeNode["likes"] as! [String: AnyObject])["count"] as! Int), followers: ((user["followed_by"] as! [String: AnyObject])["count"] as! Int)))
-                                        print("size: " + String(picNodeArray.count))
+                                        //print("win! " + String(user["username"] as! String) + "\n")
+                                        let pNode = picNode(userName: user["username"] as! String, image: maxLikeNode["display_src"] as! String, likes: ((maxLikeNode["likes"] as! [String: AnyObject])["count"] as! Int), followers: ((user["followed_by"] as! [String: AnyObject])["count"] as! Int))
+                                        self.picNodeArray.append(pNode)
+                                        //print("size: " + String(picNodeArray.count))
+                                        self.postsToDisplay.append(PostToDisplay(imageURL: pNode.image, user: pNode.userName, likes: pNode.likes, followers: pNode.followers))
+                                        DispatchQueue.main.async {
+                                            self.tableView.reloadData()
+                                        }
                                     }
                                 }
                             }
-                            
                         } catch {
                             print("Error with Json: \(error)")
                         }
-                        
-
                     }
-                    picNodeArray.sort{
-                        Double($0.likes)/Double($0.followers)*Double($0.likes) < Double($1.likes)/Double($1.followers)*Double($1.likes)
-                    }
-                    var count = 0
-                    for picNode in picNodeArray{
-//                        print(String(picNode.userName) + " ")
-//                        print("Followers: " + String(picNode.followers) + " ")
-//                        print("Likes: " + String(picNode.likes) + "\n")
-                        self.postsToDisplay.append(PostToDisplay(imageURL: picNode.image, user: picNode.userName, likes: picNode.likes, followers: picNode.followers))
-                        
-                        DispatchQueue.main.async {
-                            count += 1
-                            //self.imageView.image = picNode.image
-                            self.tableView.reloadData()
-                        }
-                        print(count)
-                    }
-                    
-                    
                 }
                 
                 task.resume()
@@ -84,6 +68,32 @@ class ViewController: UIViewController{
                 
                 
             }
+        /*
+        picNodeArray.sort{
+            Double($0.likes)/Double($0.followers)*Double($0.likes) < Double($1.likes)/Double($1.followers)*Double($1.likes)
+        }
+        
+        var count = 0
+        for picNode in picNodeArray{
+            print ("hey")
+            //                        print(String(picNode.userName) + " ")
+            //                        print("Followers: " + String(picNode.followers) + " ")
+            //                        print("Likes: " + String(picNode.likes) + "\n")
+            self.postsToDisplay.append(PostToDisplay(imageURL: picNode.image, user: picNode.userName, likes: picNode.likes, followers: picNode.followers))
+            
+            count += 1
+            //self.imageView.image = picNode.image
+            
+            DispatchQueue.main.async {
+                count += 1
+                //self.imageView.image = picNode.image
+                //self.tableView.reloadData()
+            }
+            //print(count)
+        }
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }*/
     }
     /*
     func downloadImage(url: URL) {
@@ -120,7 +130,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         //filteredCell.cellImage =
         filteredCell.cellText.text = "User:" + thisCellPost.user + "\nLikes:" + String(thisCellPost.likes) + "\nFollowers:" + String(thisCellPost.followers)
         filteredCell.imageView?.setImageFromURL(stringImageUrl: thisCellPost.imageURL!)
-
+        
         return filteredCell
     }
     
