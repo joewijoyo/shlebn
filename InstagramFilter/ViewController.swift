@@ -84,9 +84,6 @@ class ViewController: UIViewController{
                 
                 
             }
-            
-            
-        }
     }
     /*
     func downloadImage(url: URL) {
