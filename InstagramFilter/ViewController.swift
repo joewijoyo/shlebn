@@ -17,7 +17,8 @@ class ViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let usernames = ["sallykim7", "itsronayeh", "helloosandra"]
+        let usernames = ["sallykim7","itsronayeh","haileesteinfeld"]
+        var picNodeArray = [picNode]()
         for username in usernames {
             do {
                 let requestString: String = "https://www.instagram.com/" + username + "/?__a=1"
@@ -39,27 +40,53 @@ class ViewController: UIViewController{
                                 if let media = user["media"] as? [String: AnyObject] {
                                     if let nodes = media["nodes"] as? [[String: AnyObject]]     {
                                         //dump(nodes)
+                                        var maxLikeNode = nodes[0]
                                         for node in nodes {
-                                            self.postsToDisplay.append(PostToDisplay(imageURL: node["display_src"] as! String, user:user["username"] as! String, likes:(node["likes"] as! [String: AnyObject])["count"] as! Int, followers: (user["followed_by"] as! [String: AnyObject])["count"] as! Int))
-                                                //print (user["username"])
-                                            print ("Followers: " + String(((user["followed_by"] as! [String: AnyObject])["count"] as! Int)) + "\n")
-                                            print ("Likes: " + String(((node["likes"] as! [String: AnyObject])["count"] as! Int)) + "\n")
-                                            print (user["username"] as! String + "\n")
-                                            DispatchQueue.main.async {
-                                                //self.imageView.image = image
-                                                self.tableView.reloadData()
+                                            if (((node["likes"] as! [String: AnyObject])["count"] as! Int) > ((maxLikeNode["likes"] as! [String: AnyObject])["count"] as! Int)){
+                                                maxLikeNode = node
                                             }
                                         }
+                                        print("win! " + String(user["username"] as! String) + "\n")
+                                        picNodeArray.append(picNode(userName: user["username"] as! String, image: maxLikeNode["display_src"] as! String, likes: ((maxLikeNode["likes"] as! [String: AnyObject])["count"] as! Int), followers: ((user["followed_by"] as! [String: AnyObject])["count"] as! Int)))
+                                        print("size: " + String(picNodeArray.count))
                                     }
                                 }
                             }
+                            
                         } catch {
                             print("Error with Json: \(error)")
                         }
+                        
+
                     }
+                    picNodeArray.sort{
+                        Double($0.likes)/Double($0.followers)*Double($0.likes) < Double($1.likes)/Double($1.followers)*Double($1.likes)
+                    }
+                    var count = 0
+                    for picNode in picNodeArray{
+//                        print(String(picNode.userName) + " ")
+//                        print("Followers: " + String(picNode.followers) + " ")
+//                        print("Likes: " + String(picNode.likes) + "\n")
+                        self.postsToDisplay.append(PostToDisplay(imageURL: picNode.image, user: picNode.userName, likes: picNode.likes, followers: picNode.followers))
+                        
+                        DispatchQueue.main.async {
+                            count += 1
+                            //self.imageView.image = picNode.image
+                            self.tableView.reloadData()
+                        }
+                        print(count)
+                    }
+                    
+                    
                 }
+                
                 task.resume()
+                
+                
+                
             }
+            
+            
         }
     }
     

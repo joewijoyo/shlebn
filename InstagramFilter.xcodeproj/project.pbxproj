@@ -16,6 +16,7 @@
 		0C531E721E30519E00CF69D4 /* InstagramFilterUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C531E711E30519E00CF69D4 /* InstagramFilterUITests.swift */; };
 		0C531E801E3295CC00CF69D4 /* FilteredTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C531E7F1E3295CB00CF69D4 /* FilteredTableViewCell.swift */; };
 		0C531E821E3297D200CF69D4 /* PostToDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C531E811E3297D200CF69D4 /* PostToDisplay.swift */; };
+		5A48171F1E8DB1F5003F2823 /* picNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A48171E1E8DB1F5003F2823 /* picNode.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		0C531E731E30519E00CF69D4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0C531E7F1E3295CB00CF69D4 /* FilteredTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilteredTableViewCell.swift; sourceTree = "<group>"; };
 		0C531E811E3297D200CF69D4 /* PostToDisplay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostToDisplay.swift; sourceTree = "<group>"; };
+		5A48171E1E8DB1F5003F2823 /* picNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = picNode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 				0C531E581E30519E00CF69D4 /* Assets.xcassets */,
 				0C531E5A1E30519E00CF69D4 /* LaunchScreen.storyboard */,
 				0C531E5D1E30519E00CF69D4 /* Info.plist */,
+				5A48171E1E8DB1F5003F2823 /* picNode.swift */,
 			);
 			path = InstagramFilter;
 			sourceTree = "<group>";
@@ -268,6 +271,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A48171F1E8DB1F5003F2823 /* picNode.swift in Sources */,
 				0C531E801E3295CC00CF69D4 /* FilteredTableViewCell.swift in Sources */,
 				0C531E821E3297D200CF69D4 /* PostToDisplay.swift in Sources */,
 				0C531E541E30519D00CF69D4 /* ViewController.swift in Sources */,
@@ -522,6 +526,7 @@
 				0C531E781E30519E00CF69D4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0C531E791E30519E00CF69D4 /* Build configuration list for PBXNativeTarget "InstagramFilterTests" */ = {
 			isa = XCConfigurationList;
@@ -530,6 +535,7 @@
 				0C531E7B1E30519E00CF69D4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0C531E7C1E30519E00CF69D4 /* Build configuration list for PBXNativeTarget "InstagramFilterUITests" */ = {
 			isa = XCConfigurationList;
@@ -538,6 +544,7 @@
 				0C531E7E1E30519E00CF69D4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
